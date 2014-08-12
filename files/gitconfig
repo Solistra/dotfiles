@@ -1,0 +1,24 @@
+[user]
+	name  = Rachel Wall
+	email = solistra@gmx.com
+[core]
+	autocrlf     = input
+	safecrlf     = true
+	excludesfile = ~/.gitignore_global
+	editor       = vi
+[alias]
+	br = branch
+	ci = commit -m
+	ca = commit -am
+	co = checkout
+	sb = show-branch
+	st = status -s
+	history = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	last    = log -1 HEAD
+	unstage = reset HEAD --
+[push]
+	default = matching
+[pull]
+	rebase = true
+[hub]
+	protocol = https

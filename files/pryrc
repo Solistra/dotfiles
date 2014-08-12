@@ -1,0 +1,15 @@
+if File.directory?('lib') && !$LOAD_PATH.include?('lib')
+  $LOAD_PATH.unshift('lib')
+end
+
+$LOAD_PATH.unshift(Dir.pwd) unless $LOAD_PATH.include?(Dir.pwd)
+
+module Kernel
+  def save_data(file, object)
+    File.open(file, 'wb') { |f| f << Marshal.dump(object) }
+  end
+  
+  def load_data(file)
+    File.open(file, 'rb') { |f| Marshal.load(f) }
+  end
+end
