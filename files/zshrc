@@ -14,11 +14,10 @@ HISTSIZE=10000
 zstyle ':completion:*' menu select
 zstyle ':completion:*' ignore-parents parent pwd
 
-export PATH="$HOME/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/bin:$HOME/.rbenv/bin:$PATH"
 
 if [[ -x `which rbenv` ]] ; then
 	eval "$(rbenv init -)"
-	export PATH="$HOME/.rbenv/bin:$PATH"
 fi
 
 if [[ -x `which go` ]] ; then
