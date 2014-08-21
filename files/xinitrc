@@ -12,11 +12,12 @@ fi
 xrdb -merge ~/.Xresources
 
 # Start background processes.
-ssh-agent &
 xscreensaver -no-splash &
+eval $(ssh-agent -s)
 
-# Set the screen resolution.
+# Set the screen resolution and wallpaper.
 xrandr --output default --mode 1280x800
+eval $(cat ~/.fehbg)
 
 # Update the status message for the `dwm` window manager.
 # NOTE: This is done via `xsetroot` in a backgrounded loop.
