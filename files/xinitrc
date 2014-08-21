@@ -12,6 +12,7 @@ fi
 xrdb -merge ~/.Xresources
 
 # Start background processes.
+ssh-agent &
 xscreensaver -no-splash &
 
 # Set the screen resolution.
