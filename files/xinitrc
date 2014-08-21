@@ -20,7 +20,7 @@ xrandr --output default --mode 1280x800
 # Update the status message for the `dwm` window manager.
 # NOTE: This is done via `xsetroot` in a backgrounded loop.
 while true ; do
-	xsetroot -name "$( date '+%e %b %Y | %k:%M' ) | dwm 6.0"
+	xsetroot -name "$( date '+%e %b %Y | %k:%M' ) | $(whoami)"
 	sleep 1s
 done &
 
