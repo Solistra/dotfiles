@@ -25,4 +25,4 @@ while true ; do
 done &
 
 # Launch the window manager.
-exec dwm
+exec ck-launch-session dbus-launch dwm
