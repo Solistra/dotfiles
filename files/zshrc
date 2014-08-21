@@ -67,3 +67,7 @@ if [[ -x `which hub` ]] ; then
 fi
 
 alias help=run-help
+
+if [[ -x /usr/local/opt/autoenv/activate.sh ]] ; then
+	source /usr/local/opt/autoenv/activate.sh
+fi
