@@ -28,8 +28,7 @@ fi
 PROMPT="%# "
 RPROMPT="[%~]"
 
-editors=(vim vi nano)
-for editor in $editors ; do
+for editor in vim vi nano ; do
 	if [[ -x $(which $editor) ]] ; then
 		export EDITOR=$editor
 		break
