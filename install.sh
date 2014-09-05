@@ -48,7 +48,7 @@ force_install() {
 	local dotfile=$HOME/.$(basename $1)
 	
 	echo "Installing $(basename $dotfile)..."
-	if [ -e $dotfile ] || [ -l $dotfile ] ; then
+	if [ -e $dotfile ] || [ -h $dotfile ] ; then
 		echo "  Removing original $(basename $dotfile)..."
 		rm -f $dotfile
 	fi
