@@ -1,55 +1,87 @@
-autoload -U compinit promptinit
-autoload -Uz run-help
-compinit
-promptinit
+#!/usr/bin/zsh
+#--
+# ZSH Configuration
+# =============================================================================
+#   This file contains configuration settings for interactive `zsh` sessions
+# (such as when using a terminal emulator or the console outside of an X
+# session).
+# 
+#   Note that settings which should apply to all `zsh` sessions should be
+# placed in the "zshenv" file rather than this one; likewise, settings which
+# should only be executed by login shells belong in "zprofile".
+# 
+#++
 
-setopt AUTO_CD
-setopt EXTENDED_GLOB
+# Essential options. These allow for directories to be traveled without the
+# use of `cd` and enable extended shell globbing.
+setopt auto_cd extended_glob
 
-setopt APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_ALL_DUPS
-HISTFILE=~/.history
-SAVEHIST=10000
-HISTSIZE=10000
-
-zstyle ':completion:*' menu select
-zstyle ':completion:*' ignore-parents parent pwd
-
-export PATH="$HOME/bin:/usr/local/bin:$HOME/.rbenv/bin:$PATH"
-
-if [[ -x `which rbenv` ]] ; then
-	eval "$(rbenv init -)"
-fi
-
-if [[ -x `which go` ]] ; then
-	export GOPATH="$HOME/projects:$PATH"
-	export GOROOT="/usr/local/opt/go-1.3.1"
-fi
-
+# The prompt -- intentionally simple.
 PROMPT="%# "
 RPROMPT="[%~]"
 
+# History settings. History will be appended to rather than overwritten and
+# shared amongst `zsh` instances. Duplicate entries into the history are
+# ignored.
+setopt append_history share_history hist_ignore_dups hist_ignore_all_dups
+HISTFILE=~/.zsh_history
+SAVEHIST=2000
+HISTSIZE=2000
+
+# Auto-completion settings.
+autoload -U compinit
+compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' ignore-parents parent pwd
+zstyle ':completion:*:rm:*' ignore-line yes
+
+# Automatically push directories when changing the working directory.
+setopt auto_pushd
+DIRSTACKSIZE=50
+
+# Initialize `rbenv` and `goenv` if they exist. Produce an appropriate warning
+# if either tool is not installed.
+for tool in rbenv goenv ; do
+	toolbin=$HOME/.$tool/bin
+	if [[ -d $toolbin ]] ; then
+		export PATH="$PATH:$toolbin"
+		eval "$($tool init -)"
+	else
+		echo "zshrc: W: $tool is not installed."
+	fi
+	unset toolbin
+done
+
+# Set the $GOPATH environment variable to the appropriate location if `go` is
+# installed, produce a warning otherwise.
+if [[ -x `which go` ]] ; then
+	export GOPATH="$HOME/Source:$PATH"
+else
+	echo 'zshrc: W: go is not installed.'
+fi
+
+# Set the default editor -- the editors named in this loop are ordered by
+# preference: the first one found will be set as $EDITOR. Produces a warning
+# if none of the preferred editors could be found.
 for editor in vim vi nano ; do
-	if [[ -x $(which $editor) ]] ; then
+	if [[ -x `which $editor` ]] ; then
 		export EDITOR=$editor
 		break
 	fi
 done
+[[ -z $EDITOR ]] && print 'zshrc: W: No default editor set.'
 
-[[ -z $EDITOR ]] && print 'No editor set.'
-
-if [[ $(uname) == 'Darwin' ]] ; then
-	for format in mp3 wav aac ogg \
-	mp4 m4v mov mpg mpeg avi ogv \
-	jpg jpeg png psd bmp gif tif tiff \
-	eps ps pdf html dmg ; do
-		alias -s $format=open
+# Alias common text extensions to open directly in $EDITOR if the default
+# editor has been set.
+if [[ -n $EDITOR ]] ; then
+	for format in go md markdown rb rdoc txt text ; do
+		alias -s $format=$EDITOR
 	done
 fi
 
-for format in go md markdown rb rdoc txt text ; do
-	alias -s $format=$EDITOR
-done
-
+# Alias `ls` to automatically provide colored output -- use the appropriate
+# environment variables in OS X and FreeBSD, otherwise simply alias `ls` to
+# `ls --color=auto`.
 if [[ $(uname) == 'Darwin' || $(uname) == 'FreeBSD' ]] ; then
 	export CLICOLOR='yes'
 	export LSCOLORS='ExfxcxdxbxEgEdabagacad'
@@ -57,16 +89,13 @@ elif [[ -n `ls --color` && $? == 0 ]] ; then
 	alias ls='ls --color=auto'
 fi
 
-if [[ -x `which bundle` ]] ; then
-	alias bex='bundle exec'
-fi
+# Create the `bex` alias for `bundle exec` if `bundle` is available.
+[[ -x `which bundle` ]] && alias bex='bundle exec'
 
-if [[ -x `which hub` ]] ; then
-	alias git=hub
-fi
+# Likewise, alias `git` to `hub` if `hub` is available.
+[[ -x `which hub` ]] && alias git=hub
 
-alias help=run-help
-
+# Activate `autoenv` if it is installed.
 if [[ -x /usr/local/opt/autoenv/activate.sh ]] ; then
 	source /usr/local/opt/autoenv/activate.sh
 fi

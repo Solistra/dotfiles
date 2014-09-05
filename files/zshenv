@@ -1,0 +1,17 @@
+#!/usr/bin/zsh
+#@~/.zshrc
+#--
+# ZSH Environment
+# =============================================================================
+#   This file is evaluated whenever `zsh` is used, regardless of the shell's
+# status as a login or interactive shell.
+# 
+#++
+
+# Path settings. We use $path instead of $PATH here in order to make use of
+# the path as an array; combined with `typeset -U`, this ensures that there
+# are no duplicate entries in the $PATH.
+typeset -U path
+path=($HOME/bin /usr/local/bin $path)
+export PATH
+
