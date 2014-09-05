@@ -99,3 +99,16 @@ fi
 if [[ -x /usr/local/opt/autoenv/activate.sh ]] ; then
 	source /usr/local/opt/autoenv/activate.sh
 fi
+
+# Write appropriate information to the title of the terminal window. This
+# allows for dynamic titling (the current working directory when no command
+# is being executed, the command and arguments given to it when one is).
+case $TERM in
+	*xterm*)
+		function precmd {
+			print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+		}
+		function preexec {
+			printf "\033]0;%s\a" "$1"
+		} ;;
+esac
