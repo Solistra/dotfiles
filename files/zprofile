@@ -1,3 +1,14 @@
+#!/usr/bin/zsh
+#--
+# ZSH Login Profile
+# =============================================================================
+#   The contents of this file are only evaluated when `zsh` is invoked as a
+# login shell.
+# 
+#++
+
+# Execute `startx` if we logged into the system from the first virtual
+# terminal and the $DISPLAY environment variable has not been set by X.
 if [[ -z $DISPLAY ]] && [[ $(tty) == /dev/tty1 ]] ; then
 	exec startx
 fi
