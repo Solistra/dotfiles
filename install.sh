@@ -34,7 +34,7 @@ safe_install() {
 	
 	if [ -e $dotfile ] ; then
 		read -p "$dotfile already exists. Overwrite? (y/n) " input
-		if [ "$input" = "y" ] ; then force_install $file; fi
+		[ "$input" = "y" ] && force_install $file
 	else
 		force_install $file
 	fi
