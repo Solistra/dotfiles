@@ -15,7 +15,7 @@ report_status(){
 		exit 0
 	else
 		echo 'hub could not be uninstalled!'
-		echo 'Check for remnants in /usr/local.'
+		echo "Check for remnants in $loc."
 		exit 1
 	fi
 }
@@ -33,13 +33,13 @@ scripted_uninstall() {
 		return 1
 	else
 		echo 'Removing hub man page...'
-		sudo rm -f /usr/local/share/man/man1/hub.1
+		sudo rm -f "$loc/share/man/man1/hub.1"
 		if [ $? -ne 0 ] ; then
 			echo 'hub man page could not be removed, aborting.'
 			return 1
 		fi
 		echo 'Removing hub source directory...'
-		sudo rm -rf /usr/local/src/hub
+		sudo rm -rf "$loc/src/hub"
 		if [ $? -ne 0 ] ; then
 			echo 'hub source could not be removed, aborting.'
 			return 1
@@ -49,11 +49,13 @@ scripted_uninstall() {
 # =============================================================================
 # Script Body
 # =============================================================================
-if [ -x  "$(which hub)" ] ; then
+if [ -x "$(which hub)" ] ; then
 	echo 'Uninstalling hub...'
-	if [ -x "$(which brew)"] ; then
+	if [ -x "$(which brew)" ] ; then
+		loc='/usr/local/opt'
 		brew rm hub
 	else
+		loc='/usr/local'
 		scripted_uninstall
 	fi
 	report_status

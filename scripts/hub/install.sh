@@ -9,11 +9,11 @@
 # status, and exits with either 0 for success or 1 for failure.
 report_status(){
 	if [ $? -eq 0 ] ; then
-		echo 'hub installed to /usr/local/bin/hub.'
+		echo "hub installed to $loc/bin/hub."
 		exit 0
 	else
 		echo 'hub failed to install.'
-		echo 'Check for remnants in /usr/local/src/hub.'
+		echo "Check for remnants in $loc."
 		exit 1
 	fi
 }
@@ -26,18 +26,18 @@ report_status(){
 # management and `sudo` available to execute commands as root.
 scripted_install() {
 	# `homebrew` is not installed, so manage the installation manually.
-	if [ -d /usr/local/src/hub ] ; then
-		read -p '/usr/local/src/hub exists. Overwrite? (y/n) ' input
+	if [ -d "$loc/src/hub" ] ; then
+		read -p "$loc/src/hub exists. Overwrite? (y/n) " input
 		[ "$input" != 'y' ] && return 2
-		sudo rm -rf /usr/local/src/hub
+		sudo rm -rf "$loc/src/hub"
 	fi
 	# Ensure that we have `git` installed.
 	[ -x "$(which git)" ] || sudo apt-get install git
 	echo 'Cloning hub source repository...'
-	sudo git clone git://github.com/github/hub.git /usr/local/src/hub
+	sudo git clone git://github.com/github/hub.git "$loc/src/hub"
 	if [ $? -eq 0 ] ; then
 		# The `git clone` command succeeded, proceed with installation.
-		cd /usr/local/src/hub
+		cd "$loc/src/hub"
 		if [ ! -x "$(which rake)" ] ; then
 			# Get `ruby` and `rake` if we don't already have them.
 			[ -x "$(which ruby)" ] || sudo apt-get install ruby1.9.1
@@ -56,8 +56,10 @@ scripted_install() {
 # =============================================================================
 echo 'Installing hub...'
 if [ -x "$(which brew)" ] ; then
+	loc='/usr/local/opt'
 	brew update && brew install hub
 else
+	loc='/usr/local'
 	scripted_install
 fi
 report_status
