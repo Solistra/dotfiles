@@ -16,7 +16,7 @@ report_status(){
 		exit 0
 	else
 		echo 'rbenv could not be uninstalled!'
-		echo 'Check for remnants in ~/.rbenv.'
+		echo "Check for remnants in $loc."
 		exit 1
 	fi
 }
@@ -26,9 +26,11 @@ report_status(){
 if [ -x "$(which rbenv)" ] ; then
 	echo 'Uninstalling rbenv...'
 	if [ -x "$(which brew)" ] ; then
+		loc='/usr/local/opt/rbenv'
 		brew rm rbenv ruby-build
 	else
-		rm -rf $HOME/.rbenv
+		loc="$HOME/.rbenv"
+		rm -rf $loc
 	fi
 	report_status
 else
