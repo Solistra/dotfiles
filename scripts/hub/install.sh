@@ -13,6 +13,7 @@ report_status(){
 		exit 0
 	else
 		echo 'hub failed to install.'
+		echo 'Check for remnants in /usr/local/src/hub.'
 		exit 1
 	fi
 }
@@ -53,6 +54,7 @@ scripted_install() {
 # =============================================================================
 # Script Body
 # =============================================================================
+echo 'Installing hub...'
 if [ -x "$(which brew)" ] ; then
 	brew update && brew install hub
 else
