@@ -24,7 +24,7 @@ report_status(){
 #   Automates removal of `hub`, its associated `man` page, and source.
 # 
 # NOTE: This function assumes that `hub` was installed via the `install.sh`
-# script avaiable from this repository.
+# script available from this repository.
 scripted_uninstall() {
 	echo "Removing $(which hub)..."
 	sudo rm -f `which hub`
