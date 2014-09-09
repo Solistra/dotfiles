@@ -116,7 +116,7 @@ bindkey "^[s" prepend_sudo
 # can use <Control>Z to send `vim` to the background, perform actions in the
 # shell, then <Control>Z to bring `vim` back to the foreground.
 function bring_to_fg(){
-	[[ $#BUFFER -eq 0 ]] && BUFFER='fg' && zle-accept-line
+	[[ $#BUFFER -eq 0 ]] && BUFFER='fg' && zle accept-line
 }
 zle -N bring_to_fg
 bindkey '^Z' bring_to_fg
