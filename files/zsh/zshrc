@@ -100,9 +100,9 @@ if [[ -x "$(which git)" ]] ; then
 fi
 
 # Activate `autoenv` if it is installed.
-if [[ -x /usr/local/opt/autoenv/activate.sh ]] ; then
-	source /usr/local/opt/autoenv/activate.sh
-fi
+for loc in /usr/local/opt/autoenv $HOME/.autoenv ; do
+	[[ -d $loc ]] && source "$loc/activate.sh"
+done
 
 # Prepend 'sudo ' at the beginning of the line with <Alt>s key binding.
 function prepend_sudo(){
