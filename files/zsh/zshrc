@@ -104,6 +104,23 @@ if [[ -x /usr/local/opt/autoenv/activate.sh ]] ; then
 	source /usr/local/opt/autoenv/activate.sh
 fi
 
+# Prepend 'sudo ' at the beginning of the line with <Alt>s key binding.
+function prepend_sudo(){
+	[[ $BUFFER != 'sudo '* ]] && BUFFER="sudo $BUFFER" && CURSOR+=5
+}
+zle -N prepend_sudo
+bindkey "^[s" prepend_sudo
+
+# Use <Control>Z to foreground a background process.
+# NOTE: This is extremely useful when used in combination with `vim`, as you
+# can use <Control>Z to send `vim` to the background, perform actions in the
+# shell, then <Control>Z to bring `vim` back to the foreground.
+function bring_to_fg(){
+	[[ $#BUFFER -eq 0 ]] && BUFFER='fg' && zle-accept-line
+}
+zle -N bring_to_fg
+bindkey '^Z' bring_to_fg
+
 # Write appropriate information to the title of the terminal window. This
 # allows for dynamic titling (the current working directory when no command
 # is being executed, the command and arguments given to it when one is).
