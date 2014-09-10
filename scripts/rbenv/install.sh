@@ -38,11 +38,6 @@ scripted_install(){
 # Script Body
 # =============================================================================
 echo 'Installing rbenv and ruby-build...'
-if [ -x "$(which brew)" ] ; then
-	loc='/usr/local/opt/rbenv'
-	brew update && brew install rbenv ruby-build
-else
-	loc="$HOME/.rbenv"
-	scripted_install
-fi
+loc="$HOME/.rbenv"
+scripted_install
 report_status

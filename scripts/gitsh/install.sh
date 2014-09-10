@@ -23,13 +23,13 @@ report_status() {
 }
 # scripted_install()
 # -----------------------------------------------------------------------------
-#   Provides automated installation for the `gitsh` command when `brew` is not
-# available.
+#   Provides automated installation for the `gitsh` command.
 # 
 # NOTE: This function is intended to be used on systems with Debian package
-# management and `sudo` available to execute commands as root.
+# management and `sudo` available to execute commands as root. When installing
+# on OS X, it is assumed that you have Ruby and the XCode command line tools
+# installed.
 scripted_install() {
-	# `homebrew` is not installed, so manage the installation manually.
 	if [ -d "/usr/local/src/gitsh-$version" ] ; then
 		read -p "/usr/local/src/gitsh-$version exists. Overwrite? (y/n) " input
 		[ "$input" != 'y' ] && return 2
@@ -62,9 +62,5 @@ scripted_install() {
 # Script Body
 # =============================================================================
 echo 'Installing gitsh...'
-if [ -x "$(which brew)" ] ; then
-	brew update && brew install gitsh
-else
-	scripted_install
-fi
+scripted_install
 report_status
