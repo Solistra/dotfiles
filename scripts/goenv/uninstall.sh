@@ -16,7 +16,7 @@ report_status(){
 		exit 0
 	else
 		echo 'goenv could not be uninstalled!'
-		echo 'Check for remnants in ~/.goenv.'
+		echo "Check for remnants in $HOME/.goenv."
 		exit 1
 	fi
 }
