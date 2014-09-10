@@ -9,11 +9,11 @@
 # status, and exits with either 0 for success or 1 for failure.
 report_status(){
 	if [ $? -eq 0 ] ; then
-		echo 'goenv installed to ~/.goenv/bin/goenv.'
+		echo "goenv installed to $HOME/.goenv/bin/goenv."
 		exit 0
 	else
 		echo 'goenv failed to install.'	
-		echo 'Check for remnants in ~/.goenv.'
+		echo "Check for remnants in $HOME/.goenv."
 		exit 1
 	fi
 }
