@@ -25,13 +25,8 @@ report_status(){
 # =============================================================================
 if [ -d $HOME/.autoenv ] || [ -d /usr/local/opt/autoenv ] ; then
 	echo 'Uninstalling autoenv...'
-	if [ -x "$(which brew)" ] ; then
-		loc='/usr/local/opt/autoenv'
-		brew rm autoenv
-	else
-		loc="$HOME/.autoenv"
-		rm -rf $loc
-	fi
+	loc="$HOME/.autoenv"
+	rm -rf $loc
 	report_status
 else
 	echo 'autoenv is not installed!'

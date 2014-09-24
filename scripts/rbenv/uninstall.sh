@@ -25,13 +25,8 @@ report_status(){
 # =============================================================================
 if [ -x "$(which rbenv)" ] ; then
 	echo 'Uninstalling rbenv...'
-	if [ -x "$(which brew)" ] ; then
-		loc='/usr/local/opt/rbenv'
-		brew rm rbenv ruby-build
-	else
-		loc="$HOME/.rbenv"
-		rm -rf $loc
-	fi
+	loc="$HOME/.rbenv"
+	rm -rf $loc
 	report_status
 else
 	echo 'rbenv is not installed!'

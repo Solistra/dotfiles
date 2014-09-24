@@ -51,13 +51,8 @@ scripted_uninstall() {
 # =============================================================================
 if [ -x "$(which hub)" ] ; then
 	echo 'Uninstalling hub...'
-	if [ -x "$(which brew)" ] ; then
-		loc='/usr/local/opt'
-		brew rm hub
-	else
-		loc='/usr/local'
-		scripted_uninstall
-	fi
+	loc='/usr/local'
+	scripted_uninstall
 	report_status
 else
 	echo 'hub is not installed!'

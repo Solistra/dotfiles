@@ -55,11 +55,6 @@ scripted_install() {
 # Script Body
 # =============================================================================
 echo 'Installing hub...'
-if [ -x "$(which brew)" ] ; then
-	loc='/usr/local/opt'
-	brew update && brew install hub
-else
-	loc='/usr/local'
-	scripted_install
-fi
+loc='/usr/local'
+scripted_install
 report_status

@@ -62,13 +62,8 @@ scripted_uninstall(){
 # =============================================================================
 if [ -x  "$(which gitsh)" ] ; then
 	echo 'Uninstalling gitsh...'
-	if [ -x "$(which brew)" ] ; then
-		loc='/usr/local/opt'
-		brew rm gitsh
-	else
-		loc='/usr/local'
-		scripted_uninstall
-	fi
+	loc='/usr/local'
+	scripted_uninstall
 	report_status
 else
 	echo 'gitsh is not installed!'

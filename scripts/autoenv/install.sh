@@ -34,11 +34,6 @@ scripted_install() {
 # Script Body
 # =============================================================================
 echo 'Installing autoenv...'
-if [ -x "$(which brew)" ] ; then
-	loc='/usr/local/opt/autoenv'
-	brew update && brew install autoenv
-else
-	loc="$HOME/.autoenv"
-	scripted_install
-fi
+loc="$HOME/.autoenv"
+scripted_install
 report_status
