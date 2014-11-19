@@ -7,10 +7,20 @@
 # 
 #++
 
+# Assign the appropriate value for JAVA_HOME if we're running on OS X and
+# it has not already been defined.
+if [[ $(uname) == 'Darwin' && -z $JAVA_HOME ]] ; then
+        export JAVA_HOME=$(/usr/libexec/java_home)
+fi
+
+# Paths related to Java build / project management tools.
+export ANT_HOME=$HOME/Projects/Java/apache-ant
+export MVN_HOME=$HOME/Projects/Java/apache-maven
+
 # Path settings. We use $path instead of $PATH here in order to make use of
 # the path as an array; combined with `typeset -U`, this ensures that there
 # are no duplicate entries in the $PATH.
 typeset -U path
-path=($HOME/bin /usr/local/bin $path)
+path=($HOME/bin $MVN_HOME/bin $ANT_HOME/bin /usr/local/bin $path)
 export PATH
 
