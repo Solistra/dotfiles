@@ -21,7 +21,7 @@ report_status(){
 #   Automates installation of standard Ruby gems.
 scripted_install(){
 	local errtotal=0
-	for ruby_gem in bundler observr pry rake rspec ; do
+	for ruby_gem in benchmark-ips bundler observr pry rake rspec ; do
 		echo "Installing $ruby_gem..."
 		gem install $ruby_gem
 		[ $? -eq 0 ] || errtotal=$(( $errtotal + 1 ))
