@@ -12,6 +12,7 @@ fi
 xrdb -merge ~/.Xresources
 
 # Start background processes.
+xcompmgr &
 eval $(ssh-agent -s)
 
 # Set the screen resolution and wallpaper.
