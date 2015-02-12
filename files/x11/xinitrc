@@ -12,7 +12,6 @@ fi
 xrdb -merge ~/.Xresources
 
 # Start background processes.
-xscreensaver -no-splash &
 eval $(ssh-agent -s)
 
 # Set the screen resolution and wallpaper.
