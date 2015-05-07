@@ -39,6 +39,10 @@ zstyle ':completion:*:rm:*' ignore-line yes
 setopt auto_pushd
 DIRSTACKSIZE=50
 
+# Allow "command not found" completion if the 'command-not-found' package has
+# been installed.
+[[ -f /etc/zsh_command_not_found ]] && . /etc/zsh_command_not_found
+
 # Initialize `rbenv` and `goenv` if they exist. Produce an appropriate warning
 # if either tool is not installed.
 for tool in rbenv goenv ; do
