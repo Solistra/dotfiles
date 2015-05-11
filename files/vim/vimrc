@@ -1,0 +1,26 @@
+execute pathogen#infect()
+
+syntax on
+filetype plugin indent on
+
+set autoindent
+set backspace=indent,eol,start
+set colorcolumn=80
+set complete-=i
+set expandtab
+set laststatus=2
+set nrformats-=octal
+set number
+set ruler
+set scrolloff=1
+set sessionoptions-=options
+set shiftwidth=2
+set showcmd
+set sidescrolloff=5
+set smarttab
+set softtabstop=2
+set tabstop=2
+set wildmenu
+
+set display+=lastline
+set encoding=utf-8
