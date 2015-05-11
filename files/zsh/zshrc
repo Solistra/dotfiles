@@ -58,7 +58,7 @@ done
 
 # Set the $GOPATH environment variable to the appropriate location if `go` is
 # installed, produce a warning otherwise.
-if [[ -x "$(which go)" ]] ; then
+if [[ -x "$(command -v go)" ]] ; then
 	export GOPATH="$HOME/Source:$PATH"
 else
 	echo 'zshrc: W: go is not installed.'
@@ -68,7 +68,7 @@ fi
 # preference: the first one found will be set as $EDITOR. Produces a warning
 # if none of the preferred editors could be found.
 for editor in vim vi nano ; do
-	if [[ -x "$(which $editor)" ]] ; then
+	if [[ -x "$(command -v $editor)" ]] ; then
 		export EDITOR=$editor
 		break
 	fi
@@ -94,13 +94,13 @@ elif [[ -n `ls --color` && $? == 0 ]] ; then
 fi
 
 # Create the `bex` alias for `bundle exec` if `bundle` is available.
-[[ -x "$(which bundle)" ]] && alias bex='bundle exec'
+[[ -x "$(command -v bundle)" ]] && alias bex='bundle exec'
 
 # Alias `g` for `git` if `git` is available.
-if [[ -x "$(which git)" ]] ; then
+if [[ -x "$(command -v git)" ]] ; then
 	alias g=git
 	# Alias `git` for `hub` if `hub` is installed.
-	[[ -x "$(which hub)" ]] && alias git=hub
+	[[ -x "$(command -v hub)" ]] && alias git=hub
 fi
 
 # Activate `autoenv` if it is installed.
