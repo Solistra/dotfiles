@@ -12,19 +12,15 @@ fi
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
 # Start background processes.
-xcompmgr &
-eval $(ssh-agent -s)
+[ -x $(command -v xcompmgr) ] && xcompmgr &
+[ -x $(command -v unclutter) ] && unclutter -idle 1 -root &
 
-# Set the screen resolution and wallpaper.
-xrandr --output default --mode 1280x800
+# Set the wallpaper.
 eval $(cat ~/.fehbg)
 
 # Update the status message for the `dwm` window manager.
-# NOTE: This is done via `xsetroot` in a backgrounded loop.
 while true ; do
 	xsetroot -name "$( date '+%e %b %Y | %k:%M' ) | $(whoami)"
 	sleep 1s
 done &
-
-# Launch the window manager.
 exec dbus-launch dwm
