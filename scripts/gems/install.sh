@@ -23,7 +23,7 @@ scripted_install(){
 	local errtotal=0
 	for ruby_gem in benchmark-ips bundler observr pry rake rspec ; do
 		echo "Installing $ruby_gem..."
-		gem install $ruby_gem
+		gem install --conservative $ruby_gem
 		[ $? -eq 0 ] || errtotal=$(( $errtotal + 1 ))
 	done
 	return $errtotal
