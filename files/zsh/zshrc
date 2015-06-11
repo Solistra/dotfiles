@@ -11,14 +11,18 @@
 # should only be executed by login shells belong in "zprofile".
 # 
 #++
+# Enable extended shell globbing.
+setopt extended_glob
 
-# Essential options. These allow for directories to be traveled without the
-# use of `cd` and enable extended shell globbing.
-setopt auto_cd extended_glob
+# Make the global `precmd_functions` and `preexec_functions` arrays available.
+typeset -ga precmd_functions
+typeset -ga preexec_functions
 
 # The prompt -- intentionally simple.
-PROMPT="%# "
-RPROMPT="[%~]"
+autoload -U colors && colors
+PROMPT="
+%{$fg_bold[magenta]%}%m%{$reset_color%} %{$fg_bold[yellow]%}%~%{$reset_color%}
+%{$fg_bold[green]%}%# %{$reset_color%}"
 
 # History settings. History will be appended to rather than overwritten and
 # shared amongst `zsh` instances. Duplicate entries into the history are
@@ -29,8 +33,7 @@ SAVEHIST=2000
 HISTSIZE=2000
 
 # Auto-completion settings.
-autoload -U compinit
-compinit
+autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*:rm:*' ignore-line yes
@@ -41,109 +44,73 @@ DIRSTACKSIZE=50
 
 # Allow "command not found" completion if the 'command-not-found' package has
 # been installed.
-[[ -f /etc/zsh_command_not_found ]] && . /etc/zsh_command_not_found
+[[ -f /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
 
-# Initialize `rbenv` and `goenv` if they exist. Produce an appropriate warning
-# if either tool is not installed.
-for tool in rbenv goenv ; do
-	toolbin=$HOME/.$tool/bin
-	if [[ -d $toolbin ]] ; then
-		export PATH="$PATH:$toolbin"
-		eval "$($tool init -)"
-	else
-		echo "zshrc: W: $tool is not installed."
-	fi
-	unset toolbin
-done
-
-# Set the $GOPATH environment variable to the appropriate location if `go` is
-# installed, produce a warning otherwise.
-if [[ -x "$(command -v go)" ]] ; then
-	export GOPATH="$HOME/Source:$PATH"
+# Initialize `rbenv` if it is installed.
+if [[ -d ~/.rbenv/bin ]] ; then
+  export PATH=$PATH:~/.rbenv/bin
+  eval "$(rbenv init -)"
 else
-	echo 'zshrc: W: go is not installed.'
+  # Warn if `rbenv` was not found.
+  print 'zshrc: W: rbenv is not installed.'
 fi
 
-# Set the default editor -- the editors named in this loop are ordered by
-# preference: the first one found will be set as $EDITOR. Produces a warning
-# if none of the preferred editors could be found.
+# Set the default editor.
 for editor in vim vi nano ; do
-	if [[ -x "$(command -v $editor)" ]] ; then
-		export EDITOR=$editor
-		break
-	fi
+  if [[ -x "$(command -v $editor)" ]] ; then
+    export EDITOR=$editor
+    break
+  fi
 done
+
+# Warn if no default editor is set.
 [[ -z $EDITOR ]] && print 'zshrc: W: No default editor set.'
-
-# Alias common text extensions to open directly in $EDITOR if the default
-# editor has been set.
-if [[ -n $EDITOR ]] ; then
-	for format in go md markdown rb rdoc txt text ; do
-		alias -s $format=$EDITOR
-	done
-fi
-
-# Alias `ls` to automatically provide colored output -- use the appropriate
-# environment variables in OS X and FreeBSD, otherwise simply alias `ls` to
-# `ls --color=auto`.
-if [[ $(uname) == 'Darwin' || $(uname) == 'FreeBSD' ]] ; then
-	export CLICOLOR='yes'
-	export LSCOLORS='ExfxcxdxbxEgEdabagacad'
-elif [[ -n `ls --color` && $? == 0 ]] ; then
-	alias ls='ls --color=auto'
-fi
 
 # Create the `bex` alias for `bundle exec` if `bundle` is available.
 [[ -x "$(command -v bundle)" ]] && alias bex='bundle exec'
 
 # Alias `g` for `git` if `git` is available.
-if [[ -x "$(command -v git)" ]] ; then
-	alias g=git
-	# Alias `git` for `hub` if `hub` is installed.
-	[[ -x "$(command -v hub)" ]] && alias git=hub
-fi
+[[ -x "$(command -v git)" ]] && alias g=git
 
 # Activate `autoenv` if it is installed.
 for loc in /usr/local/opt/autoenv $HOME/.autoenv ; do
-	[[ -d $loc ]] && source "$loc/activate.sh"
+  [[ -d $loc ]] && source "$loc/activate.sh"
 done
 
 # Prepend 'sudo ' at the beginning of the line with <Alt>s key binding.
 function prepend_sudo(){
-	[[ $BUFFER != 'sudo '* ]] && BUFFER="sudo $BUFFER" && CURSOR+=5
+  [[ $BUFFER != 'sudo '* ]] && BUFFER="sudo $BUFFER" && CURSOR+=5
 }
 zle -N prepend_sudo
 bindkey "^[s" prepend_sudo
 
 # Use <Control>Z to foreground a background process.
-# NOTE: This is extremely useful when used in combination with `vim`, as you
-# can use <Control>Z to send `vim` to the background, perform actions in the
-# shell, then <Control>Z to bring `vim` back to the foreground.
 function bring_to_fg(){
-	if [[ ! -z `jobs` ]] && [[ $#BUFFER -eq 0 ]] ; then
-		BUFFER='fg'
-		zle accept-line
-	fi
+if [[ -n "$(jobs)" && $#BUFFER -eq 0 ]] ; then
+    BUFFER='fg'
+    zle accept-line
+  fi
 }
 zle -N bring_to_fg
 bindkey '^Z' bring_to_fg
 
 # Make the directory, then `cd` into it.
 function mcd(){
-	mkdir -p "$1" && cd "$1"
+  mkdir -p "$1" && cd "$1"
 }
 
 # Write appropriate information to the title of the terminal window. This
 # allows for dynamic titling (the current working directory when no command
 # is being executed, the command and arguments given to it when one is).
 case $TERM in
-	*xterm*)
-		function precmd {
-			print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
-		}
-		function preexec {
-			printf "\033]0;%s\a" "$1"
-		} ;;
+  xterm* | screen*)
+    function precmd {
+      print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+    }
+    function preexec {
+      printf "\033]0;%s\a" "$1"
+    }
+  ;;
 esac
 
 # Source the ~/.zsh_local file if it exists -- this is intended for local
