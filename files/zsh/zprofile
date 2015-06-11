@@ -14,12 +14,12 @@ SSH_ENV="$HOME/.ssh/env"
 function start_agent() {
   /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
   chmod 600 "${SSH_ENV}"
-  . "${SSH_ENV}" > /dev/null
+  source "${SSH_ENV}" > /dev/null
   /usr/bin/ssh-add
 }
 
 if [[ -f "${SSH_ENV}" ]] ; then
-  . "${SSH_ENV}" > /dev/null
+  source "${SSH_ENV}" > /dev/null
   ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
     start_agent
   }
@@ -31,4 +31,10 @@ fi
 # terminal and the $DISPLAY environment variable has not been set by X.
 if [[ -z $DISPLAY ]] && [[ $(tty) == /dev/tty1 ]] ; then
 	exec startx
+fi
+
+# Export the $DISPLAY environment variable if we're connecting via `tmux` and
+# an X session is running.
+if [[ -z $DISPLAY && -n "$(pidof X)" && $TERM == 'screen' ]] ; then
+  export DISPLAY=:0
 fi
