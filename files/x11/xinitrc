@@ -9,18 +9,18 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 # Update the X resources database.
-[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+[ -f ~/.Xresources ] && xrdb -merge ~/.Xresources
 
 # Start background processes.
 [ -x $(command -v xcompmgr) ] && xcompmgr &
 [ -x $(command -v unclutter) ] && unclutter -idle 1 -root &
 
 # Set the wallpaper.
-eval $(cat ~/.fehbg)
+[ -f ~/.fehbg ] && sh ~/.fehbg &
 
 # Update the status message for the `dwm` window manager.
 while true ; do
-	xsetroot -name "$( date '+%e %b %Y | %k:%M' ) | $(whoami)"
+	xsetroot -name "$( date '+%e %b %Y | %k:%M' )"
 	sleep 1s
 done &
 exec dbus-launch dwm
