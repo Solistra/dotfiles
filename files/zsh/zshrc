@@ -19,10 +19,8 @@ typeset -ga precmd_functions
 typeset -ga preexec_functions
 
 # The prompt -- intentionally simple.
-autoload -U colors && colors
-PROMPT="
-%{$fg_bold[magenta]%}%m%{$reset_color%} %{$fg_bold[yellow]%}%~%{$reset_color%}
-%{$fg_bold[green]%}%# %{$reset_color%}"
+PROMPT="%m: %~
+%# "
 
 # History settings. History will be appended to rather than overwritten and
 # shared amongst `zsh` instances. Duplicate entries into the history are
